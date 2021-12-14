@@ -1,7 +1,14 @@
 ---
+
 proxmox_user: 'root@pam'
+
+# Difficult password
 proxmox_password: 'wfr2HGT8phk2jnb!gym'
-proxmox_api_host: 'pve.node.enso'
+
+# Proxmox VE hostname
+proxmox_api_host: ''
+
+# Proxmox Node name
 proxmox_node: 'pve'
 
 # Network Defaults
