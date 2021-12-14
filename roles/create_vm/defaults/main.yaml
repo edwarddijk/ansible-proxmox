@@ -1,0 +1,10 @@
+---
+proxmox_user: 'root@pam'
+proxmox_password: 'wfr2HGT8phk2jnb!gym'
+proxmox_api_host: 'pve.node.enso'
+proxmox_node: 'pve'
+
+# Network Defaults
+vm_interface_index: 4
+vm_subnet_bits: 24
+vm_gateway: 172.16.30.254

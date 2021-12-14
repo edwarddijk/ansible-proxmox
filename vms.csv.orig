@@ -1,0 +1,9 @@
+name;cores;memory;os_type;extra_disk1;extra_disk1_size;extra_disk1_store;ip_address
+dc01;2;2048;core;yes;60;local-btrfs;172.16.30.1
+dc02;2;2048;core;yes;60;local-btrfs;172.16.30.2
+bh01;2;4096;desktop;no;;local-btrfs;172.16.30.3
+ca01;2;2048;core;no;;local-btrfs;172.16.30.4
+fs01;2;2048;core;yes;60;local-btrfs;172.16.30.5
+fs02;2;2048;core;yes;60;local-btrfs;172.16.30.6
+wsus01;2;2048;desktop;yes;1000;HDD;172.16.30.7
+bck01;2;2048;desktop;yes;1000;HDD;172.16.30.8

@@ -1,0 +1,34 @@
+---
+
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Read a CSV file
+      community.general.read_csv:
+        path: vms.csv
+        delimiter: ';'
+      register: vms
+      
+    - name: Print CSV
+      ansible.builtin.debug:
+        msg: "Name: {{ item.name }} with {{ item.cores }}CPU Cores and {{ item.memory }}MB of memory"
+      loop: "{{ vms.list }}"
+
+    - name: Ensure all VM's are created
+      include_role:
+        name: create_vm
+      vars:
+        vm_name: "{{ item.name }}"
+        vm_cpu_cores: "{{ item.cores }}"
+        vm_memory: "{{ item.memory }}"
+        vm_ip: "{{ item.ip_address }}"
+        os_type: "{{ item.os_type }}"
+        vm_subnet_bits: "{{ vm_subnet_bits }}"
+        vm_gateway: "{{ vm_gateway }}"
+        extra_disk1: "{{ item.extra_disk1 }}"
+        extra_disk1_size: "{{ item.extra_disk1_size }}"
+        extra_disk1_store: "{{ item.extra_disk1_store }}"
+        extra_disk2: "{{ item.extra_disk2 }}"
+        extra_disk2_size: "{{ item.extra_disk2_size }}"
+        extra_disk2_store: "{{ item.extra_disk2_store }}"
+      loop: "{{ vms.list }}"

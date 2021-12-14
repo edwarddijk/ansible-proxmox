@@ -1,0 +1,73 @@
+---
+
+- name: Clone VM
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_user }}"
+    api_password: '{{ proxmox_password }}'
+    api_host: '{{ proxmox_api_host }}'
+    node: "{{ proxmox_node }}"
+    clone: "template-2019-{{ os_type }}"
+    name: "{{ vm_name }}"
+    full: no
+    format: unspecified
+    timeout: 300
+  register: vm
+
+- name: Print the VM ID
+  ansible.builtin.debug:
+    msg: "The VM ID is : {{ vm.vmid  }}"
+
+- name: Configure VM
+  block:
+    - name: Update the VM
+      community.general.proxmox_kvm:
+        api_user: "{{ proxmox_user }}"
+        api_password: '{{ proxmox_password }}'
+        api_host: '{{ proxmox_api_host }}'
+        node: "{{ proxmox_node }}"
+        name: "{{ vm_name }}"
+        vmid: "{{ vm.vmid }}"
+        cores: "{{ vm_cpu_cores }}"
+        memory: "{{ vm_memory }}"
+        update: yes
+        state: present
+
+    - name: "Add an extra disk 1"
+      ansible.builtin.command: qm set "{{ vm.vmid }}" --scsi1 "{{ extra_disk1_store }}:{{ extra_disk1_size }},format=raw"
+      delegate_to: '{{ proxmox_api_host }}'
+      when: extra_disk1 | bool
+
+    - name: "Add an extra disk 2"
+      ansible.builtin.command: qm set "{{ vm.vmid }}" --scsi2 "{{ extra_disk2_store }}:{{ extra_disk2_size }},format=raw"
+      delegate_to: '{{ proxmox_api_host }}'
+      when: extra_disk2 | bool
+      
+    - name: Start the VM
+      ansible.builtin.command: qm start "{{ vm.vmid }}"
+      delegate_to: '{{ proxmox_api_host }}'
+
+    - name: Pause for 1 minutes to start vm
+      pause:
+        minutes: 1
+
+    - name: Change the Administartor password
+      ansible.builtin.command: qm guest exec "{{ vm.vmid }}" "powershell.exe" "net user administrator !Welkom01"
+      delegate_to: '{{ proxmox_api_host }}'
+
+    - name: Set the IP address
+      ansible.builtin.command: qm guest exec  "{{ vm.vmid }}" "powershell.exe" "New-NetIPAddress -IfIndex 4 -IPAddress {{ vm_ip }} -PrefixLength 24 -AddressFamily IPv4 -DefaultGateway 172.16.30.254"
+      delegate_to: '{{ proxmox_api_host }}'
+
+    - name: Set DNS Servers
+      ansible.builtin.command: qm guest exec  "{{ vm.vmid }}" "powershell.exe" "Set-DnsClientServerAddress -InterfaceIndex {{ vm_interface_index }} -ServerAddresses 172.16.30.1,172.16.30.2"
+      delegate_to: '{{ proxmox_api_host }}'
+
+    - name: Set Hostname
+      ansible.builtin.command: qm guest exec  "{{ vm.vmid }}" "powershell.exe" "rename-computer -newname {{ vm_name }}"
+      delegate_to: '{{ proxmox_api_host }}'
+
+    - name: Restart Computer
+      ansible.builtin.command: qm reboot  "{{ vm.vmid }}"
+      delegate_to: '{{ proxmox_api_host }}'
+
+  when: vm.changed
