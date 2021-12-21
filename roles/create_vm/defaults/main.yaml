@@ -1,17 +1,23 @@
 ---
+# The proxmox username
+# proxmox_user: 'root@pam'
 
-proxmox_user: 'root@pam'
-
-# Difficult password
-proxmox_password: 'wfr2HGT8phk2jnb!gym'
+# The proxmox user password
+# proxmox_password: VeryDifficultPassword
 
 # Proxmox VE hostname
-proxmox_api_host: ''
+proxmox_api_host: 'some.dns.name'
 
 # Proxmox Node name
 proxmox_node: 'pve'
 
 # Network Defaults
+
+# Windows Networkcard Interface Index
 vm_interface_index: 4
+
+# Subnet bits (24 = 255.255.255.0)
 vm_subnet_bits: 24
+
+# Gateway for VM
 vm_gateway: 172.16.30.254
