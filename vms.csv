@@ -10,3 +10,4 @@ bck01;2;2048;desktop;yes;1000;HDD;no;;;172.16.30.8
 ddc01;2;4096;desktop;no;;local-btrfs;no;;;172.16.30.10
 ddc02;2;4096;desktop;no;;local-btrfs;no;;;172.16.30.11
 db01;4;8192;desktop;yes;60;local-btrfs;yes;60;local-btrfs;172.16.30.9
+mon01;4;4096;desktop;no;;local-btrfs;no;;;172.16.30.12
