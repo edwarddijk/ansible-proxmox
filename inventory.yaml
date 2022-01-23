@@ -8,6 +8,6 @@ all:
           pve.node.enso:
             ansible_user: root 
 
-vars:
-  vm_subnet_bits: 24
-  vm_gateway: 172.16.30.254
+  vars:
+    vm_subnet_bits: 24
+    vm_gateway: 172.16.30.254
